@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "pWM <- wilcox.test(patients %>% pull(7), temoins %>% pull(7), alternative = \"less\")\n# wilcox.test(patients %>% pull(7), temoins %>% pull(7), alternative = \"greater\")\nwilcox.test(patients %>% pull(7), temoins %>% pull(7), alternative = \"two.sided\")\ninstall.packages(\"Deducer\")\nlibrary(Deducer)\nRP <- sum(patients %>% pull(7))\nRT <- sum(temoins %>% pull(7))\nlikelihood.test(c(RP, 71 - RP), c(RT, 71 - RT))\nlikelihood.test(matrix(c(RP, 71 - RP, RT, 71 - RT), byrow = TRUE))\ninstall.packages(\"RVAideMemoire\")\nlibrary(RVAideMemoire)\nG.test(matrix(c(RP, 71 - RP, RT, 71 - RT), nrow = 2, byrow = TRUE))\n# wilcox.test(c(RP, 71 - RP, RT, 71 - RT), alternative = \"greater\")\nfisher.test(matrix(c(RP, 71 - RP, RT, 71 - RT), nrow = 2, byrow = TRUE))\n\n\nstr(pWM)\ntestWM <- sapply(7:32, function(i) {\n  return(wilcox.test(patients %>% pull(i), temoins %>% pull(i), alternative = \"less\")$p.value)\n}, USE.NAMES = TRUE)\nnames(testWM) = 7:32\ntestWMSorted <- sort(testWM)\n\n\n#### Trace les barplots en suivant l'ordre décroissant de la sensibilité. ####\noldPar <- par(mfrow = c(2, 3))\nplot_par_critere_ordered <- lapply(as.integer(names(testWMSorted)), function(i) {\n  tb <- table(objets[c(2, i)])\n  barplot(tb, # main=,\n          xlab=colnames(objets)[i],\n          col=c(\"darkblue\",\"red\"),\n          # legend = rownames(counts),\n          beside=TRUE)\n})\npar(oldPar)\n\n#### Voir la matrice de corrélations des 5 premières variables ####\nnbVar <- 5\nobjetsSymplifiEs <- objets[c(1:6, as.integer(names(testWMSorted))[1:nbVar])]\n\n\n#### ACP ####\nacpObjetsSym <- prcomp(formula = ~ . - N. - patient - depression - Sexe - Age - Bac,\n                       data = objetsSymplifiEs, rank. = 3)\n#### Affichage en 2D ####\n## install.packages(\"ggfortify\")\nlibrary(ggfortify)\nautoplot(acpObjetsSym, data = objetsSymplifiEs[, c(2, 7:11)], colour = 'patient')\n\n#### Maintenant en 3D ####\n## install.packages(\"plotly\")\nobjetsSymplifiEs <- cbind(objetsSymplifiEs, acpObjetsSym$x)\n\n#### Créons quelques couleurs ####\n## install.packages(\"RColorBrewer\")\nlibrary(\"RColorBrewer\")\n## display.brewer.pal(n = 11, name = 'RdBu')\ncouleurs <- brewer.pal(n = 11, name = 'RdBu')\n\nplot3DSym <- plot_ly(objetsSymplifiEs, x = ~PC1, y = ~PC2, z = ~PC3, color = ~patient, colors = couleurs[c(2,11)],\n                  hoverinfo = 'text', text = ~paste(\"No. de patient : \", N.))  %>%\n  add_markers() %>% layout(scene = list(xaxis = list(title = 'PC1'),\n                                        yaxis = list(title = 'PC2'),\n                                        zaxis = list(title = 'PC3')))\nsave(plot3DSym, file = \"plot3DSym.RData\")\n\n#### Conclusion : Choisir les 5 critères les plus sensibles est susceptible d'être insuffisant. ####\n\ncor(objetsSymplifiEs[7:11])\n",
+    "created" : 1499512789890.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1069964886",
+    "id" : "C3BF2E92",
+    "lastKnownWriteTime" : 1499524207,
+    "last_content_update" : 1499524207618,
+    "path" : "~/R/stageCHR/tests.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

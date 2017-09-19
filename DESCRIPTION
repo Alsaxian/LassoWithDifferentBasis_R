@@ -1,0 +1,12 @@
+Package: projet2017Polynomial
+Type: Package
+Title: projet2017Polynomial
+Version: 0.1.0
+Depends: methods
+Author: Xian Yang <xian.yang@etu.unistra.fr>
+Maintainer: Xian Yang <xian.yang@etu.unistra.fr>
+Description: Le paquet définie une classe S4 de polynôme, des méthodes S4 dérivées et fonctions permettant la création d'un polynôme, son évaluation en un point, les opérations arithmétiques polynomiales (ou avec un nombre), la dérivation et l'intégration, la création d'une base polynomiale orthonormée ou non, cette dernière ayant pour but d'effectuer finalement une régession polynomiale.
+License: Aucune
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "?prcomp\nprusa <- prcomp(USArrests, scale. = TRUE)\nX <- apply((USArrests - prusa$center) / prusa$scale * prusa$rotation[,'PC1'], 1, sum)\nY <- apply((USArrests - prusa$center) / prusa$scale * prusa$rotation[,'PC2'], 1, sum)\nplot(X, Y)\nbiplot(prusa, scale=0)\nstr(prusa)\n# USreal <- (USArrests - prusa$center) / prusa$scale\n(USArrests - prusa$center) / prusa$scale\n\nmyCenter <- apply(USArrests, 2, mean)\nmyCenter\nprusa$center\nmySd <- apply(USArrests, 2, sd)\nmySd\nprusa$scale\ninstall.packages(\"ggfortify\")\nlibrary(ggfortify)\nautoplot(prusa)\nplot(prusa$x[,c(\"PC1\", \"PC2\")])\n\nprusa$x\nstr(prusa$x)\n\n\ndiamonds\ndiamonds %>% count(cut, clarity)\nstr(objets[2])\nnames(objets)\ncount(objets, patient, names(objets)[7])\np <- table(objets[7], objets$patient) %>% plot_ly(x = ~names(objets)[7], y = ~n, color = ~patient)\np\n\ntb <- table(objets[c(2, 7)])\nresul <- c(\"0\", \"1\")\nis.matrix(tb)\ncolnames(tb) <- resul\ntb2 <- table(objets[c(7, 2)])\ntb2\ndt <- data.frame(resul, Patients = tb2[,1], Temoins = tb2[,2])\ndt\np <- plot_ly(dt, x = ~resul, y = ~Temoins, type = 'bar', name = 'Temoins', hoverinfo = 'y') %>%\n  add_trace(y = ~Patients, name = 'Patients') %>%\n  layout(yaxis = list(title = \"\"), xaxis = list(title = names(objets)[7]), barmode = 'group')\np\n",
+    "created" : 1499428786586.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3640414825",
+    "id" : "446F5BD6",
+    "lastKnownWriteTime" : 1499438866,
+    "last_content_update" : 1499438866932,
+    "path" : "~/R/stageCHR/brouillonStageCH.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

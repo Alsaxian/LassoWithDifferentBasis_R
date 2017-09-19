@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "setwd(\"C:/Users/ellie/Documents/R/stageCHR/\")\n\nlibrary(ggplot2)\nlibrary(reshape2)\nlibrary(dplyr)\n\n#### Traitement des NA ####\npositionsNA <- which(is.na(objets), arr.ind = TRUE, useNames = TRUE)\ncolnames(objets)[positionsNA[, 2]]\n## Attention ici on attribute une valeur défavorable à chaque NA. D'autres traitements de NA possibles.\nobjets[positionsNA[1,1], positionsNA[1,2]] <- \"B\"\nobjets[positionsNA[2,1], positionsNA[2,2]] <- 1\n\n\n#### Analyse par critère ####\n\n#### afficher la table de contingence de toutes les variables ####\n## lapply(7:32, function(x) table(objets[, c(2, x)]))\n\n#### afficher le résumé de tous les critères ####\noldPar <- par(mfrow = c(2, 3))\nplot_par_critere <- lapply(7:32, function(i) {\n  tb <- table(objets[c(2, i)])\n  barplot(tb, # main=,\n          xlab=colnames(objets)[i],\n          col=c(\"darkblue\",\"red\"),\n          # legend = rownames(counts),\n          beside=TRUE)\n})\npar(oldPar)\n\n#### afficher la heatmap de la matrice de correlation ####\ncorObjets <- cor(objets[, 7:32])\ncorHmp <- plot_ly(x = colnames(objets)[7:32], y = colnames(objets)[7:32], z = corObjets, type = \"heatmap\")\ncorHmp\n\n#### afficher les couples de variables ayant une correlation >= 0.5 ####\nfor (i in 7:31){\n  for (j in (i+1):32){\n    if (corObjets[i-6, j-6] >= 0.5)\n      cat (paste(colnames(objets)[i], \" vs. \", colnames(objets)[j], \" : \", corObjets[i-6, j-6]), \"\\n\")\n  }\n}\n\n#### ACP ####\nacpObjets <- prcomp(formula = ~ . - N. - patient - depression - Sexe - Age - Bac - de.oui, data = objets, rank. = 3)\n#### Affichage en 2D ####\n## install.packages(\"ggfortify\")\nlibrary(ggfortify)\nautoplot(acpObjets, data = objets[, c(2, 7:32)], colour = 'patient')\n\n#### Maintenant en 3D ####\n## install.packages(\"plotly\")\nobjets <- cbind(objets, acpObjets$x)\n\nlibrary(plotly)\n\n#### Créons quelques couleurs ####\n## install.packages(\"RColorBrewer\")\nlibrary(\"RColorBrewer\")\n## display.brewer.pal(n = 11, name = 'RdBu')\ncouleurs <- brewer.pal(n = 11, name = 'RdBu')\n\nplot3D <- plot_ly(objets, x = ~PC1, y = ~PC2, z = ~PC3, color = ~patient, colors = couleurs[c(2,11)],\n                  hoverinfo = 'text', text = ~paste(\"No. de patient : \", N.))  %>%\n  add_markers() %>% layout(scene = list(xaxis = list(title = 'PC1'),\n                                        yaxis = list(title = 'PC2'),\n                                        zaxis = list(title = 'PC3')))\n\nsave(plot3D, file = \"plot3D.RData\")\n## plot3D\n\n#### Maintenant, les dépressifs ####\n\nplot3D2 <- plot_ly(objets, x = ~PC1, y = ~PC2, z = ~PC3, color = ~depression,\n                  colors = couleurs[c(6, 4, 2, 7)],\n                  hoverinfo = 'text', text = ~paste(\"No. de patient : \", N.))  %>%\n  add_markers() %>% layout(scene = list(xaxis = list(title = 'PC1'),\n                                        yaxis = list(title = 'PC2'),\n                                        zaxis = list(title = 'PC3')))\n\nsave(plot3D2, file = \"plot3D2.RData\")\n## plot3D2\n",
+    "created" : 1499427550630.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "646359295",
+    "id" : "D69D2AE7",
+    "lastKnownWriteTime" : 1499520992,
+    "last_content_update" : 1499520992059,
+    "path" : "~/R/stageCHR/visualisation.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

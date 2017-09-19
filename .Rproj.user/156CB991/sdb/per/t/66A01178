@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## install.packages('readxl')\nlibrary('readxl')\n?read_excel\npatients <- read_excel(\"C://Users//ellie//Downloads//Patient Témoin V 2.xls\", sheet = \"p\", skip = 7, n_max = 71)\nstr(patients)\ntemoins <- read_excel(\"C://Users//ellie//Downloads//Patient Témoin V 2.xls\", sheet = \"t\", skip = 7, n_max = 71)\n\n#### Pour rendre les noms de colonnes légitimes pour R ####\ncolnames(patients) <- make.names(colnames(patients), unique = TRUE)\ncolnames(temoins) <- make.names(colnames(temoins), unique = TRUE)\nid_schizophrene <- read_excel(\"C://Users//ellie//Downloads//Patient Témoin V 2.xls\", sheet = \"schizophrénie\", col_names = FALSE)\nid_depressif <- read_excel(\"C://Users//ellie//Downloads//Patient Témoin V 2.xls\", sheet = \"dépression\", col_names = FALSE)\n\n#### Vérifier si les noms de colonnes sont vraiment partout identiques dans les tables de patients et de témoins ####\n## which(! colnames(patients) == colnames(temoins)) ## Doit renvoyer integer(0).\n\n## install.packages(\"tibble\")\n## library(dplyr)\nlibrary(tibble)\npatients <- add_column(patients, patient = 1, .before = 2)\npatients <- add_column(patients, depression =\n                         ifelse(patients$N. %in% id_schizophrene[[1]], 3,\n                                ifelse(patients$N. %in% id_depressif[[1]], 2, 1)), .before = 3)\npatients$patient <- as.factor(patients$patient)\npatients$depression <- as.factor(patients$depression)\n\ntemoins <- add_column(temoins, patient = 0, .before = 2)\ntemoins <- add_column(temoins, depression = 0, .before = 3)\ntemoins$patient <- as.factor(temoins$patient)\ntemoins$depression <- as.factor(temoins$depression)\n\nobjets <- rbind(patients, temoins)\n\n## save.image(\"jeunes01.RData\")\n",
+    "created" : 1499423528135.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2895574888",
+    "id" : "66A01178",
+    "lastKnownWriteTime" : 1499438866,
+    "last_content_update" : 1499438866646,
+    "path" : "~/R/stageCHR/importDonnees.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
